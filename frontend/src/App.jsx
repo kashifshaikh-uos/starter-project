@@ -1,0 +1,63 @@
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { useAuth } from './context/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
+import PrivilegeRoute from './components/PrivilegeRoute';
+import DashboardLayout from './layouts/DashboardLayout';
+import Login from './pages/Login';
+import Dashboard from './pages/Dashboard';
+import UserList from './pages/UserList';
+import UserCreate from './pages/UserCreate';
+import UserEdit from './pages/UserEdit';
+import RoleList from './pages/RoleList';
+import RoleCreate from './pages/RoleCreate';
+import RoleEdit from './pages/RoleEdit';
+import PrivilegeList from './pages/PrivilegeList';
+import PrivilegeCreate from './pages/PrivilegeCreate';
+import PrivilegeEdit from './pages/PrivilegeEdit';
+import ChangePassword from './pages/ChangePassword';
+import ChangeRole from './pages/ChangeRole';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
+
+export default function App() {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="animate-spin h-10 w-10 border-4 border-indigo-600 border-t-transparent rounded-full" />
+      </div>
+    );
+  }
+
+  return (
+    <Routes>
+      <Route path="/login" element={user ? <Navigate to="/" replace /> : <Login />} />
+      <Route path="/forgot-password" element={user ? <Navigate to="/" replace /> : <ForgotPassword />} />
+      <Route path="/reset-password" element={user ? <Navigate to="/" replace /> : <ResetPassword />} />
+
+      <Route path="/" element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
+        <Route index element={<Dashboard />} />
+        <Route path="change-password" element={<ChangePassword />} />
+        <Route path="change-role" element={<ChangeRole />} />
+
+        {/* User Management */}
+        <Route path="users" element={<PrivilegeRoute slug="user-list"><UserList /></PrivilegeRoute>} />
+        <Route path="users/create" element={<PrivilegeRoute slug="create-user"><UserCreate /></PrivilegeRoute>} />
+        <Route path="users/:id/edit" element={<PrivilegeRoute slug="update-user"><UserEdit /></PrivilegeRoute>} />
+
+        {/* Role Management */}
+        <Route path="roles" element={<PrivilegeRoute slug="role-list"><RoleList /></PrivilegeRoute>} />
+        <Route path="roles/create" element={<PrivilegeRoute slug="create-role"><RoleCreate /></PrivilegeRoute>} />
+        <Route path="roles/:id/edit" element={<PrivilegeRoute slug="update-role"><RoleEdit /></PrivilegeRoute>} />
+
+        {/* Privilege Management */}
+        <Route path="privileges" element={<PrivilegeRoute slug="privilege-list"><PrivilegeList /></PrivilegeRoute>} />
+        <Route path="privileges/create" element={<PrivilegeRoute slug="create-privilege"><PrivilegeCreate /></PrivilegeRoute>} />
+        <Route path="privileges/:id/edit" element={<PrivilegeRoute slug="create-privilege"><PrivilegeEdit /></PrivilegeRoute>} />
+      </Route>
+
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  );
+}
