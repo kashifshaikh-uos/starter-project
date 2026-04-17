@@ -76,7 +76,7 @@ class AuthController extends Controller
     {
         $request->validate([
             'current_password' => 'required|string',
-            'password' => 'required|string|min:6|confirmed',
+            'password' => ['required', 'string', 'min:8', 'confirmed', \Illuminate\Validation\Rules\Password::min(8)->mixedCase()->numbers()],
         ]);
 
         $user = $request->user();
@@ -86,6 +86,9 @@ class AuthController extends Controller
         }
 
         $user->update(['password' => $request->password]);
+
+        // Invalidate current token so user must re-login
+        JWTAuth::invalidate(JWTAuth::getToken());
 
         return response()->json(['message' => 'Password changed successfully']);
     }

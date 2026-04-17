@@ -20,12 +20,9 @@ class PasswordResetController extends Controller
 
         $user = User::where('cnic_no', $request->cnic_no)->first();
 
-        if (!$user) {
+        if (!$user || !$user->email) {
+            // Always return same message to prevent user/email enumeration
             return response()->json(['message' => 'If an account with that CNIC exists, a reset link has been sent.']);
-        }
-
-        if (!$user->email) {
-            return response()->json(['message' => 'No email is associated with this account. Please contact administrator.'], 422);
         }
 
         // Delete any existing tokens for this CNIC
@@ -41,7 +38,7 @@ class PasswordResetController extends Controller
         ]);
 
         // Build reset URL
-        $frontendUrl = env('FRONTEND_URL', 'http://localhost:5173');
+        $frontendUrl = config('app.frontend_url');
         $resetUrl = $frontendUrl . '/reset-password?token=' . $token . '&cnic=' . $request->cnic_no;
 
         // Send email
@@ -73,7 +70,7 @@ class PasswordResetController extends Controller
         $request->validate([
             'cnic_no' => 'required|string|size:13',
             'token' => 'required|string',
-            'password' => 'required|string|min:6|confirmed',
+            'password' => ['required', 'string', 'min:8', 'confirmed', \Illuminate\Validation\Rules\Password::min(8)->mixedCase()->numbers()],
         ]);
 
         $record = DB::table('password_reset_tokens')

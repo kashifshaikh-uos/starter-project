@@ -17,9 +17,12 @@ Route::get('/app-config', function () {
         'primary_color' => config('site.primary_color'),
     ]);
 });
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLink']);
-Route::post('/reset-password', [PasswordResetController::class, 'resetPassword']);
+
+Route::middleware('throttle:5,1')->group(function () {
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLink']);
+    Route::post('/reset-password', [PasswordResetController::class, 'resetPassword']);
+});
 
 // Protected
 Route::middleware(['auth:api', 'privilege'])->group(function () {

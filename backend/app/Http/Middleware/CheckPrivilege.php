@@ -28,9 +28,15 @@ class CheckPrivilege
             ->where('is_active', true)
             ->first();
 
-        // If no privilege is registered for this route, allow access (unregistered = open)
-        if (!$privilege) {
+        // Whitelist: routes that don't need privilege check
+        $openRoutes = ['/api/me', '/api/logout', '/api/refresh', '/api/change-password', '/api/change-role'];
+        if (in_array($normalized, $openRoutes)) {
             return $next($request);
+        }
+
+        // If no privilege is registered for this route, deny by default (fail-closed)
+        if (!$privilege) {
+            return response()->json(['message' => 'Access denied — no privilege configured for this route'], 403);
         }
 
         // Check if user has this privilege

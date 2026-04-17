@@ -12,7 +12,7 @@ class UserController extends Controller
         $query = User::with('activeRoles');
 
         if ($request->has('search')) {
-            $search = $request->search;
+            $search = str_replace(['%', '_'], ['\%', '\_'], $request->search);
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
                   ->orWhere('cnic_no', 'like', "%{$search}%")
@@ -30,7 +30,7 @@ class UserController extends Controller
             'cnic_no' => 'required|string|size:13|unique:users,cnic_no',
             'email' => 'nullable|email|max:255',
             'phone' => 'nullable|string|max:20',
-            'password' => 'required|string|min:6',
+            'password' => ['required', 'string', 'min:8', \Illuminate\Validation\Rules\Password::min(8)->mixedCase()->numbers()],
             'is_active' => 'boolean',
         ]);
 
@@ -51,7 +51,7 @@ class UserController extends Controller
             'cnic_no' => 'sometimes|string|size:13|unique:users,cnic_no,' . $user->id,
             'email' => 'nullable|email|max:255',
             'phone' => 'nullable|string|max:20',
-            'password' => 'nullable|string|min:6',
+            'password' => ['nullable', 'string', 'min:8', \Illuminate\Validation\Rules\Password::min(8)->mixedCase()->numbers()],
             'is_active' => 'boolean',
         ]);
 
