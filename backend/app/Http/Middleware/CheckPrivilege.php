@@ -22,17 +22,22 @@ class CheckPrivilege
         // Normalize: replace numeric segments with {id}
         $normalized = preg_replace('#/\d+#', '/{id}', $path);
 
-        // Find matching privilege by api_route and method
-        $privilege = Privilege::where('api_route', $normalized)
-            ->where('method', $method)
-            ->where('is_active', true)
-            ->first();
-
         // Whitelist: routes that don't need privilege check
         $openRoutes = ['/api/me', '/api/logout', '/api/refresh', '/api/change-password', '/api/change-role'];
         if (in_array($normalized, $openRoutes)) {
             return $next($request);
         }
+
+        // Find matching privilege:
+        // 1. First try exact method match
+        // 2. If not found, try method = NULL (allows all methods)
+        $privilege = Privilege::where('api_route', $normalized)
+            ->where('is_active', true)
+            ->where(function ($query) use ($method) {
+                $query->where('method', $method)
+                      ->orWhereNull('method');
+            })
+            ->first();
 
         // If no privilege is registered for this route, deny by default (fail-closed)
         if (!$privilege) {

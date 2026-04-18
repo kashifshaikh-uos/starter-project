@@ -180,28 +180,55 @@ class AdminSeeder extends Seeder
         $privileges[] = Privilege::create([
             'privilege_group_id' => $privMgmt->id,
             'parent_id' => $privMenu->id,
-            'name' => 'Privilege List',
-            'slug' => 'privilege-list',
+            'name' => 'Privilege Management',
+            'slug' => 'privilege-management',
             'frontend_route' => '/privileges',
             'api_route' => '/api/privileges',
-            'method' => 'GET',
+            'method' => null,
             'menu_type' => 'submenu',
-            'icon' => 'fa-list',
+            'icon' => 'fa-key',
             'sort_order' => 1,
             'show_in_menu' => false,
         ]);
 
         $privileges[] = Privilege::create([
+            'privilege_group_id' => $userMgmt->id,
+            'name' => 'View User',
+            'slug' => 'view-user',
+            'api_route' => '/api/users/{id}',
+            'method' => 'GET',
+            'menu_type' => 'none',
+            'show_in_menu' => false,
+        ]);
+
+        $privileges[] = Privilege::create([
+            'privilege_group_id' => $roleMgmt->id,
+            'name' => 'View Role',
+            'slug' => 'view-role',
+            'api_route' => '/api/roles/{id}',
+            'method' => 'GET',
+            'menu_type' => 'none',
+            'show_in_menu' => false,
+        ]);
+
+        $privileges[] = Privilege::create([
             'privilege_group_id' => $privMgmt->id,
-            'parent_id' => $privMenu->id,
-            'name' => 'Create Privilege',
-            'slug' => 'create-privilege',
-            'frontend_route' => '/privileges/create',
-            'api_route' => '/api/privileges',
-            'method' => 'POST',
-            'menu_type' => 'submenu',
-            'icon' => 'fa-plus',
-            'sort_order' => 2,
+            'name' => 'View Privilege',
+            'slug' => 'view-privilege',
+            'api_route' => '/api/privileges/{id}',
+            'method' => 'GET',
+            'menu_type' => 'none',
+            'show_in_menu' => false,
+        ]);
+
+        // Privilege Group Management
+        $privileges[] = Privilege::create([
+            'privilege_group_id' => $privMgmt->id,
+            'name' => 'Privilege Group Management',
+            'slug' => 'privilege-group-management',
+            'api_route' => '/api/privilege-groups',
+            'method' => null,  // Allows all HTTP methods
+            'menu_type' => 'none',
             'show_in_menu' => false,
         ]);
 
@@ -211,9 +238,10 @@ class AdminSeeder extends Seeder
         // Create admin user
         $admin = User::create([
             'name' => 'Admin',
-            'cnic_no' => '0000000000000',
+            'cnic_no' => '1234567890123',
             'password' => 'password',
             'is_active' => true,
+            'active_role_id' => $adminRole->id,
         ]);
 
         $admin->roles()->attach($adminRole->id);
