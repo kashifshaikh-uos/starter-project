@@ -36,10 +36,11 @@ class AdminSeeder extends Seeder
             'icon' => 'fa-cog',
             'sort_order' => 1,
             'show_in_menu' => true,
+            'is_active' => true,
         ]);
         $privileges[] = $settingsMenu;
 
-        // User Management menu (child of Settings)
+        // ============ USER MANAGEMENT ============
         $userMenu = Privilege::create([
             'privilege_group_id' => $userMgmt->id,
             'parent_id' => $settingsMenu->id,
@@ -50,9 +51,11 @@ class AdminSeeder extends Seeder
             'icon' => 'fa-users',
             'sort_order' => 1,
             'show_in_menu' => true,
+            'is_active' => true,
         ]);
         $privileges[] = $userMenu;
 
+        // User List - GET /api/users
         $privileges[] = Privilege::create([
             'privilege_group_id' => $userMgmt->id,
             'parent_id' => $userMenu->id,
@@ -65,8 +68,10 @@ class AdminSeeder extends Seeder
             'icon' => 'fa-list',
             'sort_order' => 1,
             'show_in_menu' => false,
+            'is_active' => true,
         ]);
 
+        // Create User - POST /api/users
         $privileges[] = Privilege::create([
             'privilege_group_id' => $userMgmt->id,
             'parent_id' => $userMenu->id,
@@ -79,8 +84,22 @@ class AdminSeeder extends Seeder
             'icon' => 'fa-user-plus',
             'sort_order' => 2,
             'show_in_menu' => false,
+            'is_active' => true,
         ]);
 
+        // View User - GET /api/users/{id}
+        $privileges[] = Privilege::create([
+            'privilege_group_id' => $userMgmt->id,
+            'name' => 'View User',
+            'slug' => 'view-user',
+            'api_route' => '/api/users/{id}',
+            'method' => 'GET',
+            'menu_type' => 'none',
+            'show_in_menu' => false,
+            'is_active' => true,
+        ]);
+
+        // Update User - PUT /api/users/{id}
         $privileges[] = Privilege::create([
             'privilege_group_id' => $userMgmt->id,
             'name' => 'Update User',
@@ -89,8 +108,10 @@ class AdminSeeder extends Seeder
             'method' => 'PUT',
             'menu_type' => 'none',
             'show_in_menu' => false,
+            'is_active' => true,
         ]);
 
+        // Assign Roles to User - POST /api/users/{id}/assign-roles
         $privileges[] = Privilege::create([
             'privilege_group_id' => $userMgmt->id,
             'name' => 'Assign Roles',
@@ -99,9 +120,10 @@ class AdminSeeder extends Seeder
             'method' => 'POST',
             'menu_type' => 'none',
             'show_in_menu' => false,
+            'is_active' => true,
         ]);
 
-        // Role Management menu (child of Settings)
+        // ============ ROLE MANAGEMENT ============
         $roleMenu = Privilege::create([
             'privilege_group_id' => $roleMgmt->id,
             'parent_id' => $settingsMenu->id,
@@ -112,9 +134,11 @@ class AdminSeeder extends Seeder
             'icon' => 'fa-shield',
             'sort_order' => 2,
             'show_in_menu' => true,
+            'is_active' => true,
         ]);
         $privileges[] = $roleMenu;
 
+        // Role List - GET /api/roles
         $privileges[] = Privilege::create([
             'privilege_group_id' => $roleMgmt->id,
             'parent_id' => $roleMenu->id,
@@ -127,8 +151,10 @@ class AdminSeeder extends Seeder
             'icon' => 'fa-list',
             'sort_order' => 1,
             'show_in_menu' => false,
+            'is_active' => true,
         ]);
 
+        // Create Role - POST /api/roles
         $privileges[] = Privilege::create([
             'privilege_group_id' => $roleMgmt->id,
             'parent_id' => $roleMenu->id,
@@ -141,8 +167,22 @@ class AdminSeeder extends Seeder
             'icon' => 'fa-plus',
             'sort_order' => 2,
             'show_in_menu' => false,
+            'is_active' => true,
         ]);
 
+        // View Role - GET /api/roles/{id}
+        $privileges[] = Privilege::create([
+            'privilege_group_id' => $roleMgmt->id,
+            'name' => 'View Role',
+            'slug' => 'view-role',
+            'api_route' => '/api/roles/{id}',
+            'method' => 'GET',
+            'menu_type' => 'none',
+            'show_in_menu' => false,
+            'is_active' => true,
+        ]);
+
+        // Update Role - PUT /api/roles/{id}
         $privileges[] = Privilege::create([
             'privilege_group_id' => $roleMgmt->id,
             'name' => 'Update Role',
@@ -151,8 +191,10 @@ class AdminSeeder extends Seeder
             'method' => 'PUT',
             'menu_type' => 'none',
             'show_in_menu' => false,
+            'is_active' => true,
         ]);
 
+        // Assign Privileges to Role - POST /api/roles/{id}/assign-privileges
         $privileges[] = Privilege::create([
             'privilege_group_id' => $roleMgmt->id,
             'name' => 'Assign Privileges',
@@ -161,9 +203,10 @@ class AdminSeeder extends Seeder
             'method' => 'POST',
             'menu_type' => 'none',
             'show_in_menu' => false,
+            'is_active' => true,
         ]);
 
-        // Privilege Management menu (child of Settings)
+        // ============ PRIVILEGE MANAGEMENT ============
         $privMenu = Privilege::create([
             'privilege_group_id' => $privMgmt->id,
             'parent_id' => $settingsMenu->id,
@@ -174,43 +217,43 @@ class AdminSeeder extends Seeder
             'icon' => 'fa-key',
             'sort_order' => 3,
             'show_in_menu' => true,
+            'is_active' => true,
         ]);
         $privileges[] = $privMenu;
 
+        // Privilege List - GET /api/privileges
         $privileges[] = Privilege::create([
             'privilege_group_id' => $privMgmt->id,
             'parent_id' => $privMenu->id,
-            'name' => 'Privilege Management',
-            'slug' => 'privilege-management',
+            'name' => 'Privilege List',
+            'slug' => 'privilege-list',
             'frontend_route' => '/privileges',
             'api_route' => '/api/privileges',
-            'method' => null,
+            'method' => 'GET',
             'menu_type' => 'submenu',
-            'icon' => 'fa-key',
+            'icon' => 'fa-list',
             'sort_order' => 1,
             'show_in_menu' => false,
+            'is_active' => true,
         ]);
 
+        // Create Privilege - POST /api/privileges
         $privileges[] = Privilege::create([
-            'privilege_group_id' => $userMgmt->id,
-            'name' => 'View User',
-            'slug' => 'view-user',
-            'api_route' => '/api/users/{id}',
-            'method' => 'GET',
-            'menu_type' => 'none',
+            'privilege_group_id' => $privMgmt->id,
+            'parent_id' => $privMenu->id,
+            'name' => 'Create Privilege',
+            'slug' => 'create-privilege',
+            'frontend_route' => '/privileges/create',
+            'api_route' => '/api/privileges',
+            'method' => 'POST',
+            'menu_type' => 'submenu',
+            'icon' => 'fa-plus',
+            'sort_order' => 2,
             'show_in_menu' => false,
+            'is_active' => true,
         ]);
 
-        $privileges[] = Privilege::create([
-            'privilege_group_id' => $roleMgmt->id,
-            'name' => 'View Role',
-            'slug' => 'view-role',
-            'api_route' => '/api/roles/{id}',
-            'method' => 'GET',
-            'menu_type' => 'none',
-            'show_in_menu' => false,
-        ]);
-
+        // View Privilege - GET /api/privileges/{id}
         $privileges[] = Privilege::create([
             'privilege_group_id' => $privMgmt->id,
             'name' => 'View Privilege',
@@ -219,17 +262,67 @@ class AdminSeeder extends Seeder
             'method' => 'GET',
             'menu_type' => 'none',
             'show_in_menu' => false,
+            'is_active' => true,
         ]);
 
-        // Privilege Group Management
+        // Update Privilege - PUT /api/privileges/{id}
         $privileges[] = Privilege::create([
             'privilege_group_id' => $privMgmt->id,
-            'name' => 'Privilege Group Management',
-            'slug' => 'privilege-group-management',
-            'api_route' => '/api/privilege-groups',
-            'method' => null,  // Allows all HTTP methods
+            'name' => 'Update Privilege',
+            'slug' => 'update-privilege',
+            'api_route' => '/api/privileges/{id}',
+            'method' => 'PUT',
             'menu_type' => 'none',
             'show_in_menu' => false,
+            'is_active' => true,
+        ]);
+
+        // Privilege Group List - GET /api/privilege-groups
+        $privileges[] = Privilege::create([
+            'privilege_group_id' => $privMgmt->id,
+            'name' => 'Privilege Group List',
+            'slug' => 'privilege-group-list',
+            'api_route' => '/api/privilege-groups',
+            'method' => 'GET',
+            'menu_type' => 'none',
+            'show_in_menu' => false,
+            'is_active' => true,
+        ]);
+
+        // Create Privilege Group - POST /api/privilege-groups
+        $privileges[] = Privilege::create([
+            'privilege_group_id' => $privMgmt->id,
+            'name' => 'Create Privilege Group',
+            'slug' => 'create-privilege-group',
+            'api_route' => '/api/privilege-groups',
+            'method' => 'POST',
+            'menu_type' => 'none',
+            'show_in_menu' => false,
+            'is_active' => true,
+        ]);
+
+        // View Privilege Group - GET /api/privilege-groups/{id}
+        $privileges[] = Privilege::create([
+            'privilege_group_id' => $privMgmt->id,
+            'name' => 'View Privilege Group',
+            'slug' => 'view-privilege-group',
+            'api_route' => '/api/privilege-groups/{id}',
+            'method' => 'GET',
+            'menu_type' => 'none',
+            'show_in_menu' => false,
+            'is_active' => true,
+        ]);
+
+        // Update Privilege Group - PUT /api/privilege-groups/{id}
+        $privileges[] = Privilege::create([
+            'privilege_group_id' => $privMgmt->id,
+            'name' => 'Update Privilege Group',
+            'slug' => 'update-privilege-group',
+            'api_route' => '/api/privilege-groups/{id}',
+            'method' => 'PUT',
+            'menu_type' => 'none',
+            'show_in_menu' => false,
+            'is_active' => true,
         ]);
 
         // Assign all privileges to admin role

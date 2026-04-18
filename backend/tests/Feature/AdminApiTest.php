@@ -102,8 +102,13 @@ class AdminApiTest extends TestCase
         );
         
         $privileges[] = Privilege::firstOrCreate(
-            ['slug' => 'privilege-management'],
-            ['name' => 'Privilege Management', 'api_route' => '/api/privileges', 'method' => null, 'privilege_group_id' => $privPrivGrp->id, 'is_active' => true]
+            ['slug' => 'privilege-list'],
+            ['name' => 'Privilege List', 'api_route' => '/api/privileges', 'method' => 'GET', 'privilege_group_id' => $privPrivGrp->id, 'is_active' => true]
+        );
+        
+        $privileges[] = Privilege::firstOrCreate(
+            ['slug' => 'create-privilege'],
+            ['name' => 'Create Privilege', 'api_route' => '/api/privileges', 'method' => 'POST', 'privilege_group_id' => $privPrivGrp->id, 'is_active' => true]
         );
         
         $privileges[] = Privilege::firstOrCreate(
@@ -112,8 +117,28 @@ class AdminApiTest extends TestCase
         );
         
         $privileges[] = Privilege::firstOrCreate(
-            ['slug' => 'privilege-group-management'],
-            ['name' => 'Privilege Group Management', 'api_route' => '/api/privilege-groups', 'method' => null, 'privilege_group_id' => $privPrivGrp->id, 'is_active' => true]
+            ['slug' => 'update-privilege'],
+            ['name' => 'Update Privilege', 'api_route' => '/api/privileges/{id}', 'method' => 'PUT', 'privilege_group_id' => $privPrivGrp->id, 'is_active' => true]
+        );
+        
+        $privileges[] = Privilege::firstOrCreate(
+            ['slug' => 'privilege-group-list'],
+            ['name' => 'Privilege Group List', 'api_route' => '/api/privilege-groups', 'method' => 'GET', 'privilege_group_id' => $privPrivGrp->id, 'is_active' => true]
+        );
+        
+        $privileges[] = Privilege::firstOrCreate(
+            ['slug' => 'create-privilege-group'],
+            ['name' => 'Create Privilege Group', 'api_route' => '/api/privilege-groups', 'method' => 'POST', 'privilege_group_id' => $privPrivGrp->id, 'is_active' => true]
+        );
+        
+        $privileges[] = Privilege::firstOrCreate(
+            ['slug' => 'view-privilege-group'],
+            ['name' => 'View Privilege Group', 'api_route' => '/api/privilege-groups/{id}', 'method' => 'GET', 'privilege_group_id' => $privPrivGrp->id, 'is_active' => true]
+        );
+        
+        $privileges[] = Privilege::firstOrCreate(
+            ['slug' => 'update-privilege-group'],
+            ['name' => 'Update Privilege Group', 'api_route' => '/api/privilege-groups/{id}', 'method' => 'PUT', 'privilege_group_id' => $privPrivGrp->id, 'is_active' => true]
         );
 
         // Attach all privileges to admin role

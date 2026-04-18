@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\PrivilegeGroup;
+use App\Models\Privilege;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -10,11 +11,32 @@ class PrivilegeGroupController extends Controller
 {
     public function index()
     {
-        return response()->json(
-            PrivilegeGroup::with(['privileges' => function ($q) {
-                $q->orderBy('sort_order');
-            }])->latest()->get()
-        );
+        // Get all privilege groups with their privileges
+        $groups = PrivilegeGroup::with(['privileges' => function ($q) {
+            $q->orderBy('sort_order');
+        }])->latest()->get()->toArray();
+
+        // Get privileges with null group_id
+        $ungroupedPrivileges = Privilege::whereNull('privilege_group_id')
+            ->orderBy('sort_order')
+            ->get();
+
+        // If there are ungrouped privileges, add them as a special group
+        if ($ungroupedPrivileges->count() > 0) {
+            $ungroupedGroup = [
+                'id' => 0,
+                'name' => 'Ungrouped',
+                'slug' => 'ungrouped',
+                'description' => 'Privileges without a group',
+                'is_active' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+                'privileges' => $ungroupedPrivileges->toArray(),
+            ];
+            $groups[] = $ungroupedGroup;
+        }
+
+        return response()->json($groups);
     }
 
     public function store(Request $request)
