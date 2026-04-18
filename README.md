@@ -140,7 +140,7 @@ Open `http://localhost:3000` in your browser:
 
 | Field    | Value           |
 | -------- | --------------- |
-| CNIC     | 0000000000000   |
+| CNIC     | 1234567890123   |
 | Password | password        |
 
 ---
