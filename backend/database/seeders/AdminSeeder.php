@@ -244,6 +244,7 @@ class AdminSeeder extends Seeder
             'active_role_id' => $adminRole->id,
         ]);
 
-        $admin->roles()->attach($adminRole->id);
+        // Assign super-admin role to admin user with is_active flag
+        $admin->roles()->sync([$adminRole->id => ['is_active' => true]]);
     }
 }
